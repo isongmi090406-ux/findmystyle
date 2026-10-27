@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>이상형 캐스팅 – 내 이상형과 닮은 연예인 찾기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#f2eefb; --surface:#ffffff; --ink:#241b3a; --muted:#6b6483; --line:#d9d1ee;
+  --accent:#e8336d; --accent-ink:#ffffff; --mint:#c4eedf; --mint-ink:#134b3a;
+  --focus:#241b3a;
+  --head:'Black Han Sans','Noto Sans KR',sans-serif;
+  --body:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#1a1429; --surface:#261e3b; --ink:#f1ecfc; --muted:#a79fc2; --line:#3c3257;
+    --accent:#ff5c8f; --accent-ink:#2a0b17; --mint:#1f4a3d; --mint-ink:#c4eedf; --focus:#f1ecfc;
+  }
+}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6;
+  padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.wrap{max-width:760px;margin:0 auto;padding:40px 20px 64px}
+h1{font-family:var(--head);font-weight:400;font-size:clamp(2.2rem,8vw,3.6rem);line-height:1.15;margin:0 0 12px;letter-spacing:-.01em}
+.lead{margin:0 0 28px;color:var(--muted);max-width:34em}
+.panel{background:var(--surface);border:2px solid var(--ink);border-radius:18px;padding:20px;box-shadow:6px 6px 0 var(--accent)}
+label.t{display:block;font-weight:700;margin-bottom:8px}
+textarea{width:100%;min-height:96px;resize:vertical;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;
+  font:inherit;color:var(--ink);background:var(--bg)}
+textarea:focus-visible,button:focus-visible,input:focus-visible+span{outline:3px solid var(--focus);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+.chip{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 13px;font:inherit;font-size:.9rem;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:999px;overflow:hidden}
+.seg label{cursor:pointer}
+.seg input{position:absolute;opacity:0}
+.seg span{display:block;padding:5px 14px;font-size:.9rem}
+.seg input:checked+span{background:var(--mint);color:var(--mint-ink);font-weight:700}
+.go{margin-left:auto;background:var(--accent);color:var(--accent-ink);border:2px solid var(--ink);border-radius:12px;
+  padding:10px 22px;font:inherit;font-weight:700;cursor:pointer}
+.go:active{transform:translateY(1px)}
+#out{margin-top:36px}
+.msg{color:var(--muted);padding:8px 2px}
+.card{display:grid;grid-template-columns:auto 1fr auto;gap:6px 16px;align-items:center;background:var(--surface);
+  border:1.5px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.card.top{border:2px solid var(--ink);box-shadow:6px 6px 0 var(--mint);padding:22px 20px}
+.mono{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-family:var(--head);font-size:1.5rem;
+  background:hsl(var(--h) 55% 82%);color:hsl(var(--h) 45% 22%)}
+.top .mono{width:76px;height:76px;font-size:2rem}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mono{background:hsl(var(--h) 35% 30%);color:hsl(var(--h) 60% 88%)}}
+.name{font-family:var(--head);font-size:1.35rem;line-height:1.2}
+.top .name{font-size:1.9rem}
+.job{color:var(--muted);font-size:.9rem}
+.pct{font-family:var(--head);font-size:1.6rem;color:var(--accent);text-align:right;line-height:1}
+.pct small{display:block;font-family:var(--body);font-size:.72rem;color:var(--muted);margin-top:4px}
+.body{grid-column:1/-1}
+.bar{height:8px;background:var(--bg);border-radius:99px;overflow:hidden;margin:6px 0 10px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag{background:var(--mint);color:var(--mint-ink);border-radius:6px;padding:1px 9px;font-size:.82rem}
+.why{margin:0;font-size:.95rem}
+.foot{margin-top:40px;color:var(--muted);font-size:.8rem}
+@media (max-width:520px){.go{width:100%;margin-left:0}.card{grid-template-columns:auto 1fr}.pct{grid-column:1/-1;text-align:left}}
+@media (prefers-reduced-motion:no-preference){.card.top{animation:pop .35s ease-out}@keyframes pop{from{transform:scale(.97);opacity:.4}}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>이상형, 캐스팅합니다</h1>
+  <p class="lead">어떤 사람이 좋은지 편하게 적어 보세요. 분위기가 비슷한 한국 연예인을 찾아 드려요.</p>
+
+  <section class="panel" aria-label="이상형 입력">
+    <label class="t" for="q">나의 이상형은…</label>
+    <textarea id="q" placeholder="예) 키가 크고 다정하고, 웃을 때 강아지 같은 사람. 연기도 잘하면 더 좋아요."></textarea>
+    <div class="row" id="chips" aria-label="키워드 선택"></div>
+    <div class="row">
+      <div class="seg" role="radiogroup" aria-label="성별">
+        <label><input type="radio" name="g" value="all" checked><span>전체</span></label>
+        <label><input type="radio" name="g" value="m"><span>남자</span></label>
+        <label><input type="radio" name="g" value="f"><span>여자</span></label>
+      </div>
+      <button class="go" id="go" type="button">이상형 찾기</button>
+    </div>
+  </section>
+
+  <section id="out" aria-live="polite"></section>
+  <p class="foot">연예인의 공개된 이미지와 일반적인 인상을 바탕으로 한 재미용 추천이에요. 실제 성격과는 다를 수 있어요.</p>
+</main>
+
+<script>
+// 키워드 사전: 특성 → 입력에서 찾을 말
+const TRAITS = {
+  다정:['다정','따뜻','친절','상냥','자상','배려','스윗'],
+  유머:['유머','웃긴','웃음','재밌','재미있','개그','유쾌'],
+  카리스마:['카리스마','남자다','강인','강한'],
+  시크:['시크','쿨','도도','차가'],
+  청순:['청순','순수','맑','깨끗'],
+  귀여움:['귀엽','귀여','애교','사랑스','아기'],
+  성숙:['성숙','어른','지적','세련','우아','품위'],
+  건강:['운동','근육','건강','체격','스포츠','탄탄'],
+  큰키:['키 큰','키큰','큰 키','큰키','장신','훤칠','키가 크','키 크'],
+  강아지상:['강아지','순한','댕댕','순둥'],
+  고양이상:['고양이','날카','샤프'],
+  노래:['노래','보컬','목소리','음색','가수'],
+  연기:['연기','배우'],
+  예능:['예능','입담','말 잘','말잘'],
+  차분:['차분','조용','과묵','내향','잔잔'],
+  밝음:['밝','긍정','에너지','활기','활발','명랑'],
+  패션:['패션','스타일','센스','옷'],
+  반전:['반전','갭'],
+  듬직:['듬직','든든','믿음','안정','책임'],
+  섹시:['섹시','매력','글래머','몸매']
+};
+const CHIPS = ['다정','유머','카리스마','시크','청순','귀여움','성숙','건강','큰키','강아지상','고양이상','노래','연기','차분','밝음','패션','반전','듬직'];
+
+// [이름, 성별, 직업, 특성들, 한 줄 소개]
+const STARS = [
+  ['박보검','m','배우',['다정','강아지상','차분','노래','연기','밝음'],'예의 바르고 따뜻한 이미지의 대표 주자'],
+  ['차은우','m','가수·배우',['청순','고양이상','차분','큰키','패션'],'조용하고 단정한 분위기의 비주얼'],
+  ['공유','m','배우',['성숙','카리스마','큰키','연기','듬직','차분'],'깊고 안정적인 어른 남자의 분위기'],
+  ['이동욱','m','배우',['성숙','유머','카리스마','큰키','예능'],'진중함과 재치를 함께 가진 매력'],
+  ['유재석','m','방송인',['유머','다정','예능','밝음','듬직'],'배려 깊은 진행으로 신뢰를 받는 국민 MC'],
+  ['마동석','m','배우',['듬직','건강','카리스마','반전','귀여움'],'든든한 체격에 의외로 순한 반전 매력'],
+  ['정해인','m','배우',['다정','강아지상','차분','연기','성숙'],'다정한 눈빛과 부드러운 말투'],
+  ['이종석','m','배우',['큰키','연기','밝음','패션','반전'],'훤칠한 키와 서글서글한 이미지'],
+  ['지드래곤','m','가수',['패션','카리스마','노래','시크','반전'],'자기만의 스타일이 확고한 아티스트'],
+  ['강동원','m','배우',['큰키','고양이상','성숙','연기','시크','패션'],'서늘하면서도 세련된 분위기'],
+  ['박서준','m','배우',['유머','다정','큰키','연기','건강','밝음'],'털털하고 유쾌한 옆집 오빠 이미지'],
+  ['김우빈','m','배우',['큰키','카리스마','시크','연기','반전','다정'],'강한 인상 속에 따뜻함이 있는 타입'],
+  ['이도현','m','배우',['강아지상','큰키','연기','다정','밝음'],'맑은 웃음과 성실한 이미지'],
+  ['변우석','m','배우',['큰키','성숙','연기','차분','다정'],'훤칠한 체격에 차분한 분위기'],
+  ['정국','m','가수',['노래','건강','귀여움','반전','밝음','강아지상'],'무대 위 카리스마와 평소의 순한 모습'],
+  ['뷔','m','가수·배우',['큰키','성숙','노래','패션','반전','연기'],'독특한 음색과 몽환적인 분위기'],
+  ['손흥민','m','축구선수',['건강','듬직','다정','밝음','유머'],'성실함과 환한 웃음의 스포츠 스타'],
+  ['김종국','m','가수·방송인',['건강','유머','듬직','예능','카리스마'],'꾸준한 자기관리와 입담'],
+  ['아이유','f','가수·배우',['노래','귀여움','다정','청순','연기','반전'],'맑은 목소리와 단단한 내면'],
+  ['수지','f','가수·배우',['청순','밝음','연기','다정','노래'],'맑고 환한 첫사랑 이미지'],
+  ['김태리','f','배우',['밝음','유머','연기','반전','건강'],'털털하고 에너지 넘치는 매력'],
+  ['전지현','f','배우',['성숙','큰키','카리스마','시크','연기','고양이상'],'당당하고 도회적인 분위기'],
+  ['한소희','f','배우',['시크','고양이상','섹시','연기','카리스마','패션'],'또렷하고 강렬한 인상'],
+  ['손예진','f','배우',['성숙','청순','연기','다정','차분'],'따뜻하고 우아한 멜로의 얼굴'],
+  ['김고은','f','배우',['연기','반전','차분','성숙','청순'],'작품마다 다른 얼굴을 보여 주는 배우'],
+  ['박보영','f','배우',['귀여움','밝음','연기','유머','다정'],'사랑스럽고 유쾌한 에너지'],
+  ['신민아','f','배우',['청순','성숙','차분','고양이상','다정'],'단정하고 편안한 분위기'],
+  ['이영지','f','래퍼·방송인',['유머','예능','노래','패션','시크','밝음'],'솔직한 입담과 자유로운 에너지'],
+  ['안유진','f','가수',['귀여움','밝음','고양이상','노래','예능','패션'],'발랄한 표정과 무대 장악력'],
+  ['카리나','f','가수',['시크','고양이상','큰키','노래','패션','카리스마'],'도회적이고 세련된 아이돌'],
+  ['장원영','f','가수',['귀여움','청순','밝음','패션','노래'],'인형 같은 비주얼과 긍정적인 이미지'],
+  ['김연아','f','전 피겨스케이터',['건강','성숙','카리스마','청순','듬직'],'우아함과 단단한 승부욕'],
+  ['송혜교','f','배우',['성숙','청순','연기','차분','다정'],'고요하고 품위 있는 분위기']
+];
+
+const $ = id => document.getElementById(id);
+const q = $('q'), out = $('out'), chipBox = $('chips');
+let hasSearched = false;
+
+function parse(text){
+  const found = [];
+  for (const [t, words] of Object.entries(TRAITS)){
+    if (words.some(w => text.includes(w))) found.push(t);
+  }
+  let g = 'all';
+  if (/남자(?!다)|남성|오빠|남배우/.test(text)) g = 'm';
+  else if (/여자|여성|언니|여배우/.test(text)) g = 'f';
+  return {found, g};
+}
+function hue(s){ let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) % 360; return h; }
+
+function renderChips(){
+  const {found} = parse(q.value);
+  chipBox.innerHTML = '';
+  CHIPS.forEach(c => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = c;
+    b.setAttribute('aria-pressed', found.includes(c));
+    b.onclick = () => {
+      if (found.includes(c)) return;
+      q.value = (q.value.trim() ? q.value.trim() + ', ' : '') + c;
+      renderChips();
+    };
+    chipBox.appendChild(b);
+  });
+}
+
+function card(s, i){
+  const [name, , job, , line] = s.star;
+  return `<article class="card ${i === 0 ? 'top' : ''}">
+    <div class="mono" style="--h:${hue(name)}" aria-hidden="true">${name[0]}</div>
+    <div><div class="name">${name}</div><div class="job">${job}</div></div>
+    <div class="pct">${s.pct}%<small>일치</small></div>
+    <div class="body">
+      <div class="bar" role="img" aria-label="일치도 ${s.pct}%"><i style="width:${s.pct}%"></i></div>
+      <p class="why">${line}</p>
+      <div class="tags">${s.hits.map(h => `<span class="tag">${h}</span>`).join('')}</div>
+    </div></article>`;
+}
+
+function run(){
+  hasSearched = true;
+  const text = q.value.trim();
+  const {found, g: textG} = parse(text);
+  const radio = document.querySelector('input[name="g"]:checked').value;
+  const g = radio !== 'all' ? radio : textG;
+  renderChips();
+  if (!text){ out.innerHTML = '<p class="msg">이상형을 한 줄만 적어 주세요. 아래 키워드를 눌러도 돼요.</p>'; return; }
+  if (!found.length){
+    out.innerHTML = '<p class="msg">인식한 키워드가 없어요. “다정하다”, “키가 크다”, “유머 있다”처럼 성격이나 분위기를 적거나 위의 키워드를 눌러 보세요.</p>';
+    return;
+  }
+  const scored = STARS.filter(s => g === 'all' || s[1] === g).map(star => {
+    const hits = found.filter(t => star[3].includes(t));
+    const ratio = hits.length / found.length;
+    const extra = star[3].length - hits.length; // 관련 없는 특성이 적을수록 살짝 가점
+    return {star, hits, ratio, score: ratio * 10 - extra * 0.05};
+  }).filter(s => s.hits.length).sort((a, b) => b.score - a.score).slice(0, 3);
+  if (!scored.length){ out.innerHTML = '<p class="msg">딱 맞는 사람을 찾지 못했어요. 키워드를 줄이거나 성별을 “전체”로 바꿔 보세요.</p>'; return; }
+  scored.forEach(s => s.pct = Math.min(98, Math.round(52 + 46 * s.ratio)));
+  out.innerHTML = '<p class="msg">인식한 키워드: ' + found.join(', ') + '</p>' + scored.map(card).join('');
+  out.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+}
+
+$('go').onclick = run;
+q.addEventListener('input', renderChips);
+q.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) run(); });
+document.querySelectorAll('input[name="g"]').forEach(r => r.addEventListener('change', () => hasSearched && run()));
+renderChips();
+</script>
+</body>
+</html>
